@@ -1,1 +1,1 @@
-# pseudo-image-extraction
+# Pseudo Image Extraction
