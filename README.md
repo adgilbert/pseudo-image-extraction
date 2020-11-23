@@ -42,4 +42,8 @@ The output of this step is a set of:
  2. Labels for the pseudo-ultrasound images. These labels mark the relevant regions of the pseudo images and can 
  be used when training a segmentation network. An example is shown below. 
   ![Pseudos](docs/pseudos_and_labels.png)
+  
+## Install
+
+Clone this repository and install the necessary requirements `pip install -r requirements.txt`.
 
