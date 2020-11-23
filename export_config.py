@@ -245,3 +245,28 @@ class DatasetSpecificParams:
         """ dataset to only focus on the lv"""
         self.lv_focus_percentage = 1.0
 
+def print_options(parser, opt):
+    """Print and save options
+
+    It will print both current options and default values(if different).
+    It will save options into a text file / [checkpoints_dir] / opt.txt
+    """
+    message = ''
+    message += '----------------- Options ---------------\n'
+    for k, v in sorted(vars(opt).items()):
+        comment = ''
+        default = parser.get_default(k)
+        if v != default:
+            comment = '\t[default: %s]' % str(default)
+        message += '{:>25}: {:<30}{}\n'.format(str(k), str(v), comment)
+    message += '----------------- End -------------------'
+    print(message)
+
+    # save to the disk
+    if "name" in vars(opt).keys():
+        expr_dir = os.path.join(opt.output_dir, opt.name)
+        mkdirs(expr_dir)
+        file_name = os.path.join(expr_dir, 'opt.txt')
+        with open(file_name, 'wt') as opt_file:
+            opt_file.write(message)
+            opt_file.write('\n')

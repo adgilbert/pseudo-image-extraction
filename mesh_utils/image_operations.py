@@ -149,14 +149,14 @@ def add_additive_noise(img, downsize_factor=8, noise_type="uniform"):
     return img
 
 
-def set_random_max(self, img, low=230, high=250):
+def set_random_max(img, low=230, high=250):
     """ Give an image a random max value """
     im_max = np.random.uniform(low, high)
     img = norm_img(img, im_max)
     return img
 
 
-def set_random_min(self, img, low=5, high=30):
+def set_random_min(img, low=5, high=30):
     """ Give an image a random minimum value"""
     im_min = np.random.uniform(low, high)
     factor = (img.max() - im_min) / img.max()
