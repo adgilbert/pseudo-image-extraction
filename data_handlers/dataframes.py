@@ -31,10 +31,16 @@ class VTKSliceDataframe(object):
         self.verbose = opts.verbose
 
     def load_from_pck(self, filename):
+        """ Load dataframe from pickle file
+        :param filename: Full path to the pickle file
+        """
         self._df = pickle.load(open(filename, 'rb'))
         self.vtk_id = np.max(self._df.vtk_id)
 
     def add_record(self, record: dict):
+        """ Add a row to the dataframe. Will save dataframe if max rows is reached (avoids disk errors)
+        :param record: a dictionary with each key representing a column in the dataframe
+        """
         for r in self.required_keys:
             assert r in record, "record is missing required key {}".format(r)
         # assign a unique id
@@ -55,6 +61,9 @@ class VTKSliceDataframe(object):
         return self._df
 
     def save_df(self, exts=(".pck", ".xlsx")):
+        """  Save the current dataframe. Can either save as a pickle file or an excel file
+        :param exts: how to save dataframe. Default saves both pickle and excel.
+        """
         if self._df.shape[0] < 1:
             print("no rows in df, not saving...")
             return
@@ -90,9 +99,10 @@ class VTKSliceDataframe(object):
 
     def _add_inverse_images(self, axis="axis0"):
         """ add the inverse of all images """
+        logging.warning("Adding inverse images but assuming full rotation so last is dropped. See code for more.")
         # The assumption in this function is that if you are flipping images it's because you want the entire rotation
         # Therefore this function will actually overwrite the last image in each rotation since that image is actually
-        # just the flipped version of the flipped image.
+        # just the flipped version of the first image.
         flip_df = self._df[~self._df.has_inverse]  # only include for rows where inverse hasn't been addded
         num_rotations = flip_df.rotation_id.max()
         new_rows = list()
@@ -114,11 +124,8 @@ class VTKSliceDataframe(object):
         self._df["has_inverse"] = True  # mark that all rows have an inverse
 
     def save_images(self, output_dir):
-        def make_dir(d):
-            if not os.path.exists(d):
-                os.makedirs(d)
-
-        make_dir(os.path.join(output_dir, 'slices'))
+        """ save the vtk images as pngs to output_dir """
+        utilities.mkdir(os.path.join(output_dir, 'slices'))
         for _, row in self._df.iterrows():
             save_name = '_'.join(['models{:d}'.format(int(row.model_id)),
                                   'v{:d}'.format(int(row.vtk_id)),

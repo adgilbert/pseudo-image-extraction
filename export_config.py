@@ -45,7 +45,7 @@ class BaseOptions:
                             help="number of slices to extract from each vtk models.")
         parser.add_argument("--save_vtk_slices", default=False, action="store_true",
                             help="use this flag to save each vtk slice as it's own file for later viewing in paraview.")
-        parser.add_argument("--align_vtk_slices", default=True, action="store_false",
+        parser.add_argument("--disable_align_vtk_slices", default=False, action="store_true",
                             help="use this flag to disable alignment of slices to view them relative to each other.")
         parser.add_argument("--rotation_type", type=str, default="random", choices=["iterate", "random"],
                             help="rotation type. random samples randomly, iterate samples linearly")

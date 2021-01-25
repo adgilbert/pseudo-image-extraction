@@ -62,7 +62,7 @@ class VTKSlicer(object):
                         dest_file = "n/a"
                     vtk_slice_df.add_record(
                         dict(source_file=str(case), rotation=rotation, origin=origin, landmarks=landmarks,
-                             aligned=self.opts.align_vtk_slices, dest_file=str(dest_file), model_id=c, norm=pvs_norm,
+                             aligned=(not self.opts.disable_align_vtk_slices), dest_file=str(dest_file), model_id=c, norm=pvs_norm,
                              rotation_id=i, vtk_img=single_model.get_PIL(), **angle_dict))
             except Exception as e:
                 logging.warning(f"models {case} FAILED because {e}. Skipping")
@@ -86,7 +86,7 @@ class VTKSlicer(object):
         _model.slice_extraction(origin_r, normal_r)
         # project landmarks onto new plane
         landmarks_r = [vtk_model_api.project_point_to_plane(rotation, l) for l in landmarks]
-        if self.opts.align_vtk_slices:
+        if not self.opts.disable_align_vtk_slices:
             normal_r = _model.align_slice(landmarks_r[2], landmarks_r[1], landmarks_r[0], preferred_direction)
             _model.rotate(gamma=-90)
         return _model, normal_r
