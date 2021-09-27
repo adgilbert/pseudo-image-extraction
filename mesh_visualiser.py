@@ -1,9 +1,6 @@
-import os
-from os import listdir
-from os.path import join
 import numpy as np
 import pyvista as pv
-import pickle as pkl
+from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -16,15 +13,15 @@ class MeshVisualizer:
     as well as its derivatives
     '''
 
-    def __init__(self, sliceDir,  dataDir=join("data","runData"), csvName="vtk_df_0.xlsx"):
-        self.sliceDir = sliceDir
-        self.dataDir = dataDir
+    def __init__(self, sliceDir,  dataDir= Path("data/runData"), csvName="vtk_df_0.xlsx"):
+        self.sliceDir = Path(sliceDir)
+        self.dataDir = Path(dataDir)
         self.csvName = csvName
 
         self.slicesPerModel = None
         self.slices = self._sliceMaker()
 
-        csvPath = os.path.join(self.sliceDir, self.csvName)
+        csvPath = self.sliceDir / self.csvName
         self.df = pd.read_excel(csvPath, engine='openpyxl')
 
 
@@ -34,12 +31,11 @@ class MeshVisualizer:
     def _readAsArray(self, x):
         return x.replace("array(", "").replace(")", "")
 
-    # Could all of these be lambda funcs?
     def _getFiles(self, dirPath):
         '''
             Returns the paths to the files in the specified directory. Ignores subdirectories
         '''
-        return [os.path.join(dirPath, f) for f in os.listdir(dirPath) if os.path.isfile(os.path.join(dirPath, f))]
+        return [p for p in Path(dirPath).iterdir() if p.is_file()]
 
     def _readMesh(self, path: list):
         '''
@@ -51,7 +47,7 @@ class MeshVisualizer:
         '''
             Constructs a list of paths to models based on model number
         '''
-        return ["data/runData/Full_Heart_w_peri_{}.vtk".format(n) for n in modelNo]
+        return [Path("data/runData/Full_Heart_w_peri_{}.vtk".format(n)) for n in modelNo]
 
     def _normalise(self, x):
         '''
@@ -64,9 +60,9 @@ class MeshVisualizer:
             Create a dictionary with keys corresponding to model number
             and value containing all slices available for that model
         '''
-        slicePaths = sorted(self._getFiles(os.path.join(self.sliceDir, "vtk")))
+        slicePaths = sorted(self._getFiles(self.sliceDir / "vtk"))
         self.slicesPerModel = int(
-            slicePaths[-1].split("_")[-1].split(".")[0]) + 1
+            str(slicePaths[-1]).split("_")[-1].split(".")[0]) + 1
         numHearts = len(slicePaths)/self.slicesPerModel
         assert not(len(slicePaths) % self.slicesPerModel)
 
@@ -81,14 +77,14 @@ class MeshVisualizer:
             several slices hence the nesting. The outer dimension
             changes with model whilst the inner lists contain data for each model's slices
         '''
-        csvPath = os.path.join(self.sliceDir, self.csvName)
+        csvPath = self.sliceDir / self.csvName
         df = pd.read_excel(csvPath, engine='openpyxl')
         df["rotation"] = df["rotation"].apply(self._readAsDict)
         desiredModelPaths = self._genModelPaths(modelNo)
 
         normals, origins = [], []
         for p in desiredModelPaths:
-            sliceRows = df.loc[df["source_file"] == p]
+            sliceRows = df.loc[df["source_file"] == str(p)]
 
             sliceNormals = [self._normalise(
                 np.cross(sR["dir_x"], sR["dir_y"])) for sR in sliceRows["rotation"]]
@@ -105,7 +101,7 @@ class MeshVisualizer:
         landmarks = {}
         paths = self._genModelPaths(modelNo)
         for i, p in enumerate(paths):
-            sliceRows = temp.loc[temp["source_file"] == p]
+            sliceRows = temp.loc[temp["source_file"] == str(p)]
             landmarks[modelNo[i]] = [np.array(eval(x)) for x in sliceRows["landmarks"]]
 
         return landmarks
