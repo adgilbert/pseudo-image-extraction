@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from random import sample
 
 
-class MeshVisualizer:
+class MeshVisualiser:
     '''
     Class that provides functionality for generating different views of the heart models 
     as well as its derivatives
@@ -102,13 +102,13 @@ class MeshVisualizer:
         paths = self._genModelPaths(modelNo)
         for i, p in enumerate(paths):
             sliceRows = temp.loc[temp["source_file"] == str(p)]
-            landmarks[modelNo[i]] = [np.array(eval(x)) for x in sliceRows["landmarks"]]
+            landmarks[modelNo[i]] = np.array(eval(sliceRows["landmarks"][0]))
 
         return landmarks
 
     def _sphereMaker(self, modelNo):
         landmarksDict = self._getLandmarks(modelNo)
-        self.landmarks = {m : [[pv.Sphere(radius=2, center=point)for point in slyce] for slyce in landmarksDict[m]] for m in modelNo}
+        self.landmarks = {m : [pv.Sphere(radius=2, center=point) for point in landmarksDict[m]] for m in modelNo}
         return 
 
 
@@ -159,20 +159,21 @@ class MeshVisualizer:
 
         for i, model in enumerate(modelNo):
             counter = 0
-            for j, (slyce, centers) in enumerate(zip(self.slices[model],self.landmarks[model])):
+            for j, slyce in enumerate(self.slices[model]):
                 if lim == counter:
                     break
                 p.subplot(i, j)
                 p.add_mesh(slyce)
                 # Plot landmarks
-                for center in centers:
-                    p.add_mesh(center,color='red')
+                if j == 1:
+                    for sphere in self.landmarks[model]:
+                        p.add_mesh(sphere, color='red')
                 counter += 1
 
         p.show()
         return
 
-    def clipView(self, modelNo=(0,), lim=2):
+    def clipView(self, modelNo=(0,), lim=3):
         '''
             Display the clips of the models specified by modelNo. For each model,
             a maximum of 'lim' clips are shown
@@ -183,12 +184,13 @@ class MeshVisualizer:
 
         clips = self._clipMaker(modelNo)
         for i, key in enumerate(modelNo):
-            sampledClips = sample(list(zip(clips[key],self.landmarks[key])), lim)
-            for j, (clip,centers) in enumerate(sampledClips):
+            sampledClips = sample(clips[key], lim)
+            for j, clip in enumerate(sampledClips):
                 p.subplot(i, j)
                 p.add_mesh(clip)
-                for center in centers:
-                    p.add_mesh(center, color='red')
+                if j == 1:
+                    for sphere in self.landmarks[key]:
+                        p.add_mesh(sphere, color='red')
 
 
         p.show()
@@ -215,21 +217,22 @@ class MeshVisualizer:
             pos.append(idx)
             sampledClips.append(val)
 
-        for i, (clip, centers) in enumerate(zip(sampledClips,self.landmarks[modelNum[0]])):
+        for i, clip in enumerate(sampledClips):
             p.subplot(0, i)
             p.add_mesh(clip)
             # plot landmarks
-            for center in centers:
-                p.add_mesh(center, color='red')
+            if i == 1:
+                for sphere in self.landmarks[modelNum[0]]:
+                    p.add_mesh(sphere, color='red')
 
         # Get Slices
         for i in pos:
             p.subplot(1, i)
             p.add_mesh(self.slices[modelNum[0]][i])
             # plot landmarks
-            for centers in self.landmarks[modelNum[0]]:
-                for center in centers:
-                    p.add_mesh(center, color='red')
+            if i == 1:
+                for sphere in self.landmarks[modelNum[0]]:
+                    p.add_mesh(sphere, color='red')
 
             # What does slices return? You must index that and get the slices at pos
 
