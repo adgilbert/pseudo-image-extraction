@@ -2,7 +2,6 @@ import numpy as np
 import pyvista as pv
 from pathlib import Path
 import pandas as pd
-import matplotlib.pyplot as plt
 
 from random import sample
 
@@ -102,8 +101,7 @@ class MeshVisualiser:
         paths = self._genModelPaths(modelNo)
         for i, p in enumerate(paths):
             sliceRows = temp.loc[temp["source_file"] == str(p)]
-            landmarks[modelNo[i]] = np.array(eval(sliceRows["landmarks"][0]))
-
+            landmarks[modelNo[i]] = np.array(eval(sliceRows["landmarks"].iloc[0]))
         return landmarks
 
     def _sphereMaker(self, modelNo):
@@ -137,12 +135,12 @@ class MeshVisualiser:
         '''
             Display the meshes of the models specified by modelNo
         '''
-
+        pv.set_plot_theme('paraview')
         p = pv.Plotter(shape=(len(modelNo), 1))
         models = self._readMesh(self._genModelPaths(modelNo))
         for i, model in enumerate(models):
             p.subplot(i, 0)
-            p.add_mesh(model)
+            p.add_mesh(model, show_scalar_bar=False)
 
         p.show()
         return
@@ -153,6 +151,7 @@ class MeshVisualiser:
             a maximum of 'lim' slices are shown
         '''
         # lim decides max num of slices plotted per model
+        pv.set_plot_theme('paraview')
         p = pv.Plotter(shape=(len(modelNo), lim))
         # Generate landmarks
         self._sphereMaker(modelNo)
@@ -163,11 +162,11 @@ class MeshVisualiser:
                 if lim == counter:
                     break
                 p.subplot(i, j)
-                p.add_mesh(slyce)
+                p.add_mesh(slyce, show_scalar_bar=False)
                 # Plot landmarks
                 if j == 1:
                     for sphere in self.landmarks[model]:
-                        p.add_mesh(sphere, color='red')
+                        p.add_mesh(sphere, color='yellow')
                 counter += 1
 
         p.show()
@@ -178,6 +177,7 @@ class MeshVisualiser:
             Display the clips of the models specified by modelNo. For each model,
             a maximum of 'lim' clips are shown
         '''
+        pv.set_plot_theme('paraview')
         p = pv.Plotter(shape=(len(modelNo), lim))
         # Generate landmarks
         self._sphereMaker(modelNo)
@@ -187,10 +187,10 @@ class MeshVisualiser:
             sampledClips = sample(clips[key], lim)
             for j, clip in enumerate(sampledClips):
                 p.subplot(i, j)
-                p.add_mesh(clip)
+                p.add_mesh(clip, show_scalar_bar=False)
                 if j == 1:
                     for sphere in self.landmarks[key]:
-                        p.add_mesh(sphere, color='red')
+                        p.add_mesh(sphere, color='yellow')
 
 
         p.show()
@@ -206,6 +206,7 @@ class MeshVisualiser:
         groups = [
             (2, np.s_[:])
         ]
+        pv.set_plot_theme('paraview')
         p = pv.Plotter(shape=(3, lim), groups=groups)
         self._sphereMaker(modelNum)
         # Get Clips
@@ -219,20 +220,20 @@ class MeshVisualiser:
 
         for i, clip in enumerate(sampledClips):
             p.subplot(0, i)
-            p.add_mesh(clip)
+            p.add_mesh(clip, show_scalar_bar=False)
             # plot landmarks
             if i == 1:
                 for sphere in self.landmarks[modelNum[0]]:
-                    p.add_mesh(sphere, color='red')
+                    p.add_mesh(sphere, color='yellow')
 
         # Get Slices
         for i in pos:
             p.subplot(1, i)
-            p.add_mesh(self.slices[modelNum[0]][i])
+            p.add_mesh(self.slices[modelNum[0]][i], show_scalar_bar=False)
             # plot landmarks
             if i == 1:
                 for sphere in self.landmarks[modelNum[0]]:
-                    p.add_mesh(sphere, color='red')
+                    p.add_mesh(sphere, color='yellow')
 
             # What does slices return? You must index that and get the slices at pos
 
@@ -241,19 +242,23 @@ class MeshVisualiser:
         model = self._readMesh(self._genModelPaths(modelNum))[0]
         labels = (1,2,6,8,10)
         for l in labels:
-            p.add_mesh(model.threshold((l, l)))
+            p.add_mesh(model.threshold((l, l)), show_scalar_bar=False)
             
 
         p.show()
         return
 
 
-    def thresholdView(self, labels: tuple, modelNum=(0,)):
-        p = pv.Plotter()
+    def labelView(self, labels: tuple, modelNum=(0,)):
+        p = pv.Plotter(off_screen=True)
+        pv.set_plot_theme('paraview')
 
         model = self._readMesh(self._genModelPaths(modelNum))[0]
         for l in labels:
-            p.add_mesh(model.threshold((l, l)))
+            pv.set_plot_theme('paraview')
+            p.add_mesh(model.threshold((l, l)), show_scalar_bar=True)
 
-        p.show()
+        
+        p.screenshot("test.png",transparent_background=False)
+        p.close()
         return
