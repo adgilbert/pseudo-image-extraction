@@ -326,7 +326,6 @@ class LandmarkSelector:
         #normal = np.cross(plax_normal, (apex - rv_apex))
         normal = mv - apex
         origin = np.mean(np.array(landmarks), axis=0)
-        print("plax: ", plax_normal/np.linalg.norm(plax_normal), "normal: ",normal/np.linalg.norm(normal))
         return origin, normal, landmarks
 
     def _v19(self, _model):
