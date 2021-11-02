@@ -90,3 +90,17 @@ def get_apex(_model):
     apex_id = np.argmax([np.linalg.norm(mv_center - x) for x in lv_points])
     apex = lv_points[apex_id]
     return apex
+
+#ME
+def get_rv_apex(_model):
+    """ Get the apex of the RV (index 2) from the models.
+    The apex is defined as the point farthest away from the center of the tricuspid_valve
+    """
+
+    rv = _model.threshold(2, 2)
+    rv_points = vtk_to_numpy(rv.GetOutput().GetPoints().GetData())
+    tv_center = get_centers(_model, (8,))[0]
+    rv_apex_id = np.argmax([np.linalg.norm(tv_center - x) for x in rv_points])
+    rv_apex = rv_points[rv_apex_id]
+    return rv_apex
+

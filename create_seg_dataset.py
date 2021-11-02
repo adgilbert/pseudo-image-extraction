@@ -25,6 +25,7 @@ def get_pseudo_imgs_from_vtk(df, opts):
                 pseudo_df.add_record(pi_dict)
         except AssertionError as e:
             logging.warning(f"{row.model_id}-{row.rotation_id} FAILED because {e}, skipping")
+            print("My Check, CSD: ", row.model_id,"\t\t", row.rotation_id)
             continue
     return pseudo_df
 

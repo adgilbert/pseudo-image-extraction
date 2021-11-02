@@ -37,7 +37,7 @@ class BaseOptions:
 
         # vtk parameters
         parser.add_argument("-v", "--view_name", required=True,
-                            choices=["plax", "a4ch", "a2ch", "aplax", "apical", "a4ch_viewing"],
+                            choices=["plax", "a4ch", "a2ch", "aplax", "apical", "a4ch_viewing","v1","v2","v3","v4","v5","v6","v10","v11","v12","v13","v14", "v15", "v16","v17", "v18","v19","v20","v21","v22","v23","v24"],
                             help="type of view to extract from vtk models. For more on each choice see vtk_iterators.py")
         parser.add_argument("--max_models", type=int, default=np.inf,
                             help="only use first X models, negative uses all.")
@@ -137,6 +137,29 @@ class BaseOptions:
                               (f.affine, dict(angle=140, translate=(-20, 50), scale=1.0, shear=0)), ],
                 a2ch=[(f.pad, dict(padding=60)),
                       (f.affine, dict(angle=50, translate=(-10, 30), scale=1.0, shear=0)), ],
+                #ME
+                v1=[],
+                v2=[],
+                v3=[],
+                v4=[],
+                v5=[],
+                v6=[],
+                v10=[],
+                v11=[],
+                v12=[],
+                v13=[],
+                v14=[],
+                v15=[],
+                v16=[],
+                v17=[],
+                v18=[],
+                v19=[],
+                v20=[],
+                v21=[],
+                v22=[],
+                v23=[],
+                v24=[],
+
             ),
             # transforms apply a list of custom augmentation transforms
             # style is list of tuples with (class, class parameters) as above)
@@ -171,6 +194,7 @@ class BaseOptions:
                     it.RandomSpotting(
                         loc_min=(100, 0), loc_mean=(400, 600), loc_std=(100, 100), brightness_mean=.3,
                         brightness_std=.05, size_mean=4000, size_std=500, row_col_ratio=1.)])], n_iters=3)],
+
             ),
             post_cone_pseudo=dict(
                 default=(),
