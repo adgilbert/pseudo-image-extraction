@@ -80,7 +80,7 @@ class LandmarkSelector:
     def _plax(_model):
         """
         Get the landmarks for a PLAX slice from a models. Should be the same as a APLAX slice as well.
-        Landmakrs are:
+        Landmarks are:
             - apex
             - mitral valve center
             - aortic valve center
@@ -168,7 +168,7 @@ class LandmarkSelector:
         """
         landmarks = get_centers(_model, (1, 7, 9))
         lv, mv, av = landmarks
-        
+
         normal = calculate_plane_normal(*landmarks)
         origin = np.mean(np.array(landmarks), axis=0)
 
@@ -264,7 +264,6 @@ class LandmarkSelector:
         Landmarks are:
             LA, APP, LSPV
         """
-
         landmarks = get_centers(_model, (3, 11, 12))
         la, app, lspv = landmarks
 
@@ -318,7 +317,6 @@ class LandmarkSelector:
             - LV apex
             - RV apex
         """
-
         _, plax_normal, (mv, _, apex) = self._plax(_model)
 
         rv_apex = get_rv_apex(_model)
@@ -344,7 +342,7 @@ class LandmarkSelector:
 
         return origin, normal, landmarks
 
-    def _v20(self, _model):  
+    def _v20(self, _model):
         """
         Get the landmarks required for the 20th view in 
         Landmarks are:
@@ -359,7 +357,7 @@ class LandmarkSelector:
 
         return origin, normal, landmarks
 
-    def _v21(self, _model):  
+    def _v21(self, _model):
         """
         Get the landmarks required for the 21st view in 
         Landmarks are:
@@ -410,7 +408,6 @@ class LandmarkSelector:
         Landmarks are:
             LV, MV, AV
         """
-
         # PSAX views are normal to PLAX views
         landmarks = get_centers(_model, (1, 7, 9))
         lv, mv, av = landmarks

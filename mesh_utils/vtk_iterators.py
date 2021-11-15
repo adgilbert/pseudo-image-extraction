@@ -284,25 +284,7 @@ class IteratorSelector:
         #axis1 = np.cross(axis0, (mid_apex - mv) )
         axis1 = np.cross(axis0, normal)
 
-
-        angles0, angles1 = get_angles_from_params(opts)
-
-        rotations = [
-            {'name': 'axis1',
-             'axis': axis1,
-             'center': mid_valve,
-             'angles': angles1
-             },
-            {'name': 'axis0',
-             'axis': axis0,
-             'center': mid_valve,
-             'angles': angles0
-             }
-        ]
-
-        base_plane = dict(origin=origin,
-                          dir_x=axis0,
-                          dir_y=axis1)
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
 
         return apply_rotations(base_plane, rotations, gen_type='zip')
 
@@ -314,7 +296,6 @@ class IteratorSelector:
         axis0 = lv - rv
         #axis1 = np.cross(axis0, (mid_apex - mv) )
         axis1 = np.cross(axis0, normal)
-
 
         base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
 
@@ -330,24 +311,7 @@ class IteratorSelector:
         #axis1 = np.cross(axis0, normal)
 
 
-        angles0, angles1 = get_angles_from_params(opts)
-
-        rotations = [
-            {'name': 'axis1',
-             'axis': axis1,
-             'center': mid_apex,
-             'angles': angles1
-             },
-            {'name': 'axis0',
-             'axis': axis0,
-             'center': mid_apex,
-             'angles': angles0
-             }
-        ]
-
-        base_plane = dict(origin=origin,
-                          dir_x=axis0,
-                          dir_y=axis1)
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
 
         return apply_rotations(base_plane, rotations, gen_type='zip')
 

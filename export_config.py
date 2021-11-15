@@ -37,7 +37,9 @@ class BaseOptions:
 
         # vtk parameters
         parser.add_argument("-v", "--view_name", required=True,
-                            choices=["plax", "a4ch", "a2ch", "aplax", "apical", "a4ch_viewing","v1","v2","v3","v4","v5","v6","v10","v11","v12","v13","v14", "v15", "v16","v17", "v18","v19","v20","v21","v22","v23","v24"],
+                            choices=["plax", "a4ch", "a2ch", "aplax", "apical", "a4ch_viewing","v1", "v2", "v3",
+                            "v4", "v5", "v6", "v10", "v11", "v12", "v13", "v14", "v15", "v16", "v17", "v18", "v19", 
+                            "v20", "v21", "v22", "v23", "v24"],
                             help="type of view to extract from vtk models. For more on each choice see vtk_iterators.py")
         parser.add_argument("--max_models", type=int, default=np.inf,
                             help="only use first X models, negative uses all.")
