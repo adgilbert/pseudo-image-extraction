@@ -85,6 +85,9 @@ class IteratorSelector:
         base_plane = dict(origin=origin,
                           dir_x=short_axis,
                           dir_y=long_axis)
+        
+        ## DEBUG
+        #print("My Prints:", base_plane, rotations, sep='\n\n')
 
         return apply_rotations(base_plane, rotations, gen_type='zip')
 
@@ -93,3 +96,301 @@ class IteratorSelector:
 
     def _a4ch_viewing(self, *args, **kwargs):
         return self._a4ch(*args, **kwargs)
+
+    # ME
+    ########################################################
+    #              Midesophageal Views (1-15)              #
+    ########################################################
+
+    def get_plane_rotations(opts, origin, axis0, axis1):
+        angles0, angles1 = get_angles_from_params(opts)
+
+        rotations = [
+            {'name': 'axis1',
+             'axis': axis1,
+             'center': origin,
+             'angles': angles1
+             },
+            {'name': 'axis0',
+             'axis': axis0,
+             'center': origin,
+             'angles': angles0
+             }
+        ]
+
+        base_plane = dict(origin=origin,
+                          dir_x=axis0,
+                          dir_y=axis1)
+
+        return base_plane, rotations
+
+
+    ########################################################
+    #              Midesophageal Views (1-15)              #
+    ########################################################
+
+    @staticmethod
+    def _v1(origin, normal, landmarks, opts):
+
+        mv, tv, av = landmarks
+        axis0 = tv - mv
+        axis1 = np.cross(axis0, normal)
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v2(origin, normal, landmarks, opts):
+
+        lv, mv, tv = landmarks
+        axis0 = tv - mv
+        axis1 = np.cross(axis0, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v3(origin, normal, landmarks, opts):
+
+        lv, la, mv = landmarks
+        axis1 = la - lv
+        axis0 = np.cross(axis1, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v4(origin, normal, landmarks, opts):
+
+        lv, mv, appendage = landmarks
+        axis1 = appendage - lv
+        axis0 = np.cross(axis1, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v5(origin, normal, landmarks, opts):
+
+        lv, mv, av = landmarks
+        mid_valve = mv + 0.5*(av - mv)
+        axis1 = mid_valve - lv
+        axis0 = np.cross(axis1, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v6(origin, normal, landmarks, opts):
+
+        la, mv, av = landmarks
+        mid_valve = mv + 0.5*(av - mv)
+        axis0 = mv - av
+        axis1 = np.cross(axis0, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v10(origin, normal, landmarks, opts):
+
+        ra, av, pv = landmarks
+        axis0 = ra - av
+        axis1 = np.cross(axis0, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+                          
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v11(origin, normal, landmarks, opts):
+
+        tv, av, pv = landmarks
+        axis0 = tv - av 
+        axis1 = np.cross(normal, axis0)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v12(origin, normal, landmarks, opts):
+
+        tv, svc, ivc = landmarks
+        mid_vc = ivc + 0.5*(svc - ivc)
+        axis1 = mid_vc - tv 
+        axis0 = np.cross(normal, axis1)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v13(origin, normal, landmarks, opts):
+
+        la, app, svc = landmarks
+
+        axis0 = app - la 
+        axis1 = np.cross(normal, axis0)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v14(origin, normal, landmarks, opts):
+
+        pa, lspv, ripv = landmarks
+        mid_pve = lspv + 0.5*(ripv - lspv)
+        axis0 = mid_pve - pa
+        axis1 = np.cross(normal, axis0)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v15(origin, normal, landmarks, opts):
+
+        la, app, lspv = landmarks
+        axis0 = la - app
+        axis1 = np.cross(normal, axis0)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    ########################################################
+    #              Transgastric Views (16-24)              #
+    ########################################################
+
+    @staticmethod
+    def _v16(origin, normal, landmarks, opts):
+
+        mv, tv = landmarks
+        mid_valve = tv + 0.5*(tv - tv)
+        axis0 = tv - tv
+        #axis1 = np.cross(axis0, (mid_apex - mv) )
+        axis1 = np.cross(axis0, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v17(origin, normal, landmarks, opts):
+
+        lv, rv = landmarks
+        mid_vent = rv + 0.5*(lv - rv)
+        axis0 = lv - rv
+        #axis1 = np.cross(axis0, (mid_apex - mv) )
+        axis1 = np.cross(axis0, normal)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    @staticmethod
+    def _v18(origin, normal, landmarks, opts):
+
+        apex, rv_apex, tv = landmarks
+        mid_apex = rv_apex + 0.5*(apex - rv_apex)
+        axis0 = apex - rv_apex
+        axis1 = np.cross(axis0, (mid_apex - tv) )
+        #axis1 = np.cross(axis0, normal)
+
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v19(origin, normal, landmarks, opts):
+
+        tv, pv, mid_vent = landmarks
+        axis1 = pv - mid_vent #why not mid_valve?
+        axis0 = np.cross(normal, axis1)
+
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+
+    @staticmethod
+    def _v20(origin, normal, landmarks, opts):
+
+        ra, tv, pv = landmarks
+        axis1 = tv - pv
+        axis0 = np.cross(normal, axis1)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v21(origin, normal, landmarks, opts):
+
+        lv, aorta, av = landmarks
+        axis0 = aorta - av
+        axis1 = np.cross(normal, axis0)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v22(origin, normal, landmarks, opts):
+
+        lv, la, mv = landmarks
+        axis1 = lv - la #why not mid_valve?
+        axis0 = np.cross(normal, axis1)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v23(origin, normal, landmarks, opts):
+
+        rv, ra, tv = landmarks
+        axis1 = rv - ra #why not mid_valve?
+        axis0 = np.cross(normal, axis1)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+
+    @staticmethod
+    def _v24(origin, normal, landmarks, opts):
+
+        lv, mv, av = landmarks
+        axis1 = av - lv #why not mid_valve?
+        axis0 = np.cross(normal, axis1)
+
+        base_plane, rotations, = IteratorSelector.get_plane_rotations(opts, origin, axis0, axis1)
+
+        return apply_rotations(base_plane, rotations, gen_type='zip')
+
+    ########################################################
+    #                   Aortic Views (25-28)               #
+    ########################################################
+    
+    # No aorta present in the models

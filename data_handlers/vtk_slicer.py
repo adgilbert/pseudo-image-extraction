@@ -43,6 +43,7 @@ class VTKSlicer(object):
                     break
                 single_model = Heart(str(case), opts=self.opts)
                 origin, normal, landmarks = self.landmark_fcn(single_model)
+
                 # iterator through rotation angles specified in params
                 iterator = self.iterator_fcn(origin, normal, landmarks, opts=self.opts)
 
@@ -74,7 +75,7 @@ class VTKSlicer(object):
         :param _model: Heart models
         :return: either a single slice models if mode is "normal" or a list of num slice models if mode is "random"
         """
-        # print('rotation = {}'.format(rotation))
+        #print('rotation = {}'.format(rotation))
         # rotation is dict with origin and dir_x and dir_y
         # get normal from cross product of dir_x and dir_y
         normal_r = np.cross(rotation['dir_y'], rotation['dir_x'])
