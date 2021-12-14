@@ -12,6 +12,9 @@ This repository is specifically designed for extracting images from cardiac mode
 [Generating Synthetic Labeled Data from Anatomical Models: An Example with Echocardiography Segmentation](https://adgilbert.github.io/data-generation/). It may 
 be used as a template for extracting image from other models as well. 
 
+The anatomical models from that paper are available here:  https://zenodo.org/record/4590294#.YbfgcdDMLD4
+
+
 The main script for extracting data is `create_seg_dataset.py`. Options are controlled at several different levels:
 
 1. **General options**: These options include things such as the location of the model files, how many images should be 
