@@ -1,0 +1,16 @@
+.vscode*
+*__pycache__*
+__pycache__/
+
+data/
+vistaPlay.py
+main.py
+output_dir
+
+*.diff
+
+#Environments
+.env 
+.venv 
+sp2env/
+venv/

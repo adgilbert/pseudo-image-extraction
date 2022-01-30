@@ -1,10 +1,19 @@
 # Pseudo Image Extraction
 
+This repository extracts pseudo images from anatomical images for use in training convolutional neural networks. 
+
+Converts VTK models to png images for use by the CycleGAN model.
+
+See options in `export_config.py` or by running `create_seg_dataset.py -h`
+
 Extract pseudo images from anatomical models. 
 
 This repository is specifically designed for extracting images from cardiac models as described in 
 [Generating Synthetic Labeled Data from Anatomical Models: An Example with Echocardiography Segmentation](https://adgilbert.github.io/data-generation/). It may 
 be used as a template for extracting image from other models as well. 
+
+The anatomical models from that paper are available here:  https://zenodo.org/record/4590294#.YbfgcdDMLD4
+
 
 The main script for extracting data is `create_seg_dataset.py`. Options are controlled at several different levels:
 
